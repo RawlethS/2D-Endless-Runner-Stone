@@ -5,20 +5,20 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
-    // Accel in x-axis
+    // Acceleration in x-axis
     public float maxAcceleration = 10;
     public float acceleration = 10;
     public float maxXVelocity = 100;
     public float distance = 0;
 
-    // Accel in y-axis
+    // Acceleration in y-axis
     public float gravity;
     public Vector2 velocity;
     public float jumpVelocity = 40;
     public float groundHeight = 10;
     public bool isGrounded;
 
-    // Jump
+    // Jumping
     public bool isHoldingJump = false;
     // In seconds
     public float maxHoldJumpTime = 0.4f;
@@ -62,9 +62,11 @@ public class Player : MonoBehaviour
         // Grabs the current position at current update
         Vector2 pos = transform.position;
 
+        // When in the air
         if (!isGrounded)
         {
-            // Allows Player to hold jump (to go higher) until a max time
+            // Allows Player to hold jump (to go higher) until
+            // a max time (therefore max height)
             if (isHoldingJump)
             {
                 holdJumpTimer += Time.fixedDeltaTime;
@@ -86,6 +88,7 @@ public class Player : MonoBehaviour
             }
         }
 
+        // When on the ground, velocity increases to a plateau
         if (isGrounded)
         {
             float velocityRatio = velocity.x / maxXVelocity;
@@ -97,10 +100,10 @@ public class Player : MonoBehaviour
                 velocity.x = maxXVelocity;
             }
         }
-        // Updates distanc
+        // Updates distance
         distance += velocity.x * Time.fixedDeltaTime;
 
-        // Updates position after changes
+        // Updates position with changes
         transform.position = pos;
     }
 
