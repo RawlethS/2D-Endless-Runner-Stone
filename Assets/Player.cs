@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -81,12 +81,31 @@ public class Player : MonoBehaviour
             {
                 velocity.y += gravity * Time.fixedDeltaTime;
             }
-            if (pos.y <= groundHeight)
+            
+            // Ground collider for player whilst jumping/in the air
+            // 0.7f is a buffer zone (shifting it forward from model) for the player
+            Vector2 rayOrigin = new Vector2(pos.x + 0.7f, pos.y);
+            Vector2 rayDirection = Vector2.up;
+            float rayDistance = velocity.y * Time.fixedDeltaTime;
+
+            RaycastHit2D hit2D = Physics2D.Raycast(rayOrigin, rayDirection, rayDistance);
+            if (hit2D.collider != null)
             {
-                pos.y = groundHeight;
-                isGrounded = true;
+                // Player is colliding with ground
+                Ground ground = hit2D.collider.GetComponent<Ground>();
+                if (ground != null)
+                {
+                    groundHeight = ground.groundHeight;
+                    pos.y = groundHeight;
+                    velocity.y = 0;
+                    isGrounded = true;
+                }
             }
+            Debug.DrawRay(rayOrigin, rayDirection * rayDistance, Color.red);
         }
+
+        // Updates distance
+        distance += velocity.x * Time.fixedDeltaTime;
 
         // When on the ground, velocity increases to a plateau
         if (isGrounded)
@@ -99,9 +118,21 @@ public class Player : MonoBehaviour
             {
                 velocity.x = maxXVelocity;
             }
+
+            // Checks whether player is grounded for when the player is grounded but not jumping/in the air
+            // 0.7f is a buffer zone (now in the opposite direction) for player to jump off at the edge without immediately falling off
+            Vector2 rayOrigin = new Vector2(pos.x - 0.7f, pos.y);
+            Vector2 rayDirection = Vector2.up;
+            float rayDistance = velocity.y * Time.fixedDeltaTime;
+
+            RaycastHit2D hit2D = Physics2D.Raycast(rayOrigin, rayDirection, rayDistance);
+            // If player is not colliding with anything, then player is NOT grounded
+            if (hit2D.collider == null)
+            {
+                isGrounded = false;
+            }
+            Debug.DrawRay(rayOrigin, rayDirection * rayDistance, Color.yellow);
         }
-        // Updates distance
-        distance += velocity.x * Time.fixedDeltaTime;
 
         // Updates position with changes
         transform.position = pos;
