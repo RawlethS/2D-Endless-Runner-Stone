@@ -21,7 +21,8 @@ public class Player : MonoBehaviour
     // Jumping
     public bool isHoldingJump = false;
     // In seconds
-    public float maxHoldJumpTime = 0.4f;
+    public float maxHoldJumpTime = 0.4f; // Range 0.0f - 0.4f based on velocityRatio used below
+    public float maxMaxHoldJumpTime = 0.4f;
     public float holdJumpTimer = 0.0f;
     public float jumpGroundThreshold = 2;
 
@@ -110,9 +111,16 @@ public class Player : MonoBehaviour
         // When on the ground, velocity increases to a plateau
         if (isGrounded)
         {
+            // Velocity@0, Ratio = 0
+            // Velocity@Max, Ratio = 1
             float velocityRatio = velocity.x / maxXVelocity;
+            // Acceleration of acceleration decreases as it reaches limit
             acceleration = maxAcceleration * (1 - velocityRatio);
+            // Ratio@0 = No extra jump time
+            // Ratio@Max = Max extra jump time
+            maxHoldJumpTime = maxMaxHoldJumpTime * velocityRatio;
 
+            // Updates velocity per current acceleration
             velocity.x += acceleration * Time.fixedDeltaTime;
             if (velocity.x >= maxXVelocity)
             {

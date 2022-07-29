@@ -30,15 +30,15 @@ public class Parallax : MonoBehaviour
         // going in negative velocity therefore going "backward"
         pos.x -= realVelocity * Time.fixedDeltaTime;
 
-/*        // As soon as object leaves the camera on the left, it immediately gets put back beyond the right border
+        // As soon as object leaves the camera on the left, it immediately gets put back beyond the right border
         // + added randomness with a higher scale for closer depth objects to the player
         if (pos.x <= 0 - transform.localScale.x / 2)
         {
             pos.x = (Camera.main.transform.localPosition.x * 2) + (transform.localScale.x / 2) + Random.Range(0, 1000 / depth);
-        }*/
+        }
 
-        if (pos.x <= -25)
-            pos.x = 85;
+/*        if (pos.x <= -25)
+            pos.x = 85;*/
 
         transform.position = pos;
     }
