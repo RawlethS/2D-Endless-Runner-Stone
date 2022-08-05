@@ -22,7 +22,8 @@ public class Player : MonoBehaviour
     public bool isHoldingJump = false;
     // In seconds
     public float maxHoldJumpTime = 0.4f; // Range 0.0f - 0.4f based on velocityRatio used below
-    public float maxMaxHoldJumpTime = 0.4f;
+                                         // Var is also player's *current* max jump time
+    public float maxMaxHoldJumpTime = 0.4f; // Ceiling limit of max jump time
     public float holdJumpTimer = 0.0f;
     public float jumpGroundThreshold = 2;
 
